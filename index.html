@@ -1,31 +1,72 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ваш Telegram ID</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        h1 {
-            font-size: 2em;
-        }
-    </style>
-</head>
-<body>
-    <script>
-        // Получаем информацию от Telegram
-        const user = new URLSearchParams(window.location.search);
-        const telegramId = user.get('user_id') || 'ID не найден';
+from flask import Flask, request, jsonify, render_template
+import sqlite3
+import os
 
-        // Добавление telegram ID в HTML
-        document.write(`<h1>Ваш Telegram ID: ${telegramId}</h1>`);
-    </script>
-</body>
-</html>
+app = Flask(__name__)
+
+DATABASE = 'users.db'
+
+def get_db_connection():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    if not os.path.exists(DATABASE):
+        conn = get_db_connection()
+        conn.execute('''
+            CREATE TABLE users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER UNIQUE NOT NULL,
+                username TEXT,
+                avatar_url TEXT,
+                balance REAL DEFAULT 0
+            )
+        ''')
+        conn.commit()
+        conn.close()
+
+@app.route('/')
+def index():
+    telegram_id = request.args.get('tgid')
+    if not telegram_id:
+        return "Telegram ID is required", 400
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE telegram_id = ?', (telegram_id,)).fetchone()
+    conn.close()
+
+    if not user:
+        return "User not found", 404
+
+    return render_template('index.html', user=user)
+
+@app.route('/place_bet', methods=['POST'])
+def place_bet():
+    data = request.json
+    telegram_id = data.get('tgid')
+    amount = data.get('amount')
+
+    if not telegram_id or not amount:
+        return jsonify({"status": "error", "message": "Telegram ID and amount are required"}), 400
+
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE telegram_id = ?', (telegram_id,)).fetchone()
+
+    if not user:
+        conn.close()
+        return jsonify({"status": "error", "message": "User not found"}), 404
+
+    if user['balance'] < amount:
+        conn.close()
+        return jsonify({"status": "error", "message": "Insufficient balance"}), 400
+
+    conn.execute('UPDATE users SET balance = balance - ? WHERE telegram_id = ?', (amount, telegram_id))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"status": "success", "message": "Bet placed successfully"})
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)
