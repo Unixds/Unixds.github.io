@@ -3,6 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram User Info</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+        }
+        .username {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <img id="avatar" src="" alt="User Avatar">
+    <div id="username" class="username"></div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+
+        // Получение данных пользователя
+        const user = tg.initDataUnsafe.user;
+
+        if (user) {
+            // Установка аватарки
+            const avatar = document.getElementById('avatar');
+            avatar.src = user.photo_url;
+
+            // Установка username
+            const username = document.getElementById('username');
+            username.innerText = user.username || 'No username';
+        } else {
+            // Если данные пользователя недоступны
+            document.getElementById('username').innerText = 'User data not available';
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Betting</title>
     <style>
         body {
