@@ -3,52 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram User Info</title>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
-        img {
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-        }
-        .username {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-    </style>
+    <title>Telegram Username Checker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <img id="avatar" src="" alt="User Avatar">
-    <div id="username" class="username"></div>
-
-    <script>
-        // Инициализация Telegram Web App
-        const tg = window.Telegram.WebApp;
-
-        // Получение данных пользователя
-        const user = tg.initDataUnsafe.user;
-
-        if (user) {
-            // Установка аватарки
-            const avatar = document.getElementById('avatar');
-            avatar.src = user.photo_url;
-
-            // Установка username
-            const username = document.getElementById('username');
-            username.innerText = user.username || 'No username';
-        } else {
-            // Если данные пользователя недоступны
-            document.getElementById('username').innerText = 'User data not available';
-        }
-    </script>
+    <div class="container">
+        <h1>Username Checker</h1>
+        <div class="input-group">
+            <label for="length">Username Length:</label>
+            <input type="number" id="length" min="5" max="32" value="8">
+        </div>
+        <div class="input-group">
+            <label for="keywords">Keywords (comma separated):</label>
+            <input type="text" id="keywords" placeholder="e.g. john,doe,2023">
+        </div>
+        <div class="input-group">
+            <label for="count">Number of usernames to generate:</label>
+            <input type="number" id="count" min="1" max="100" value="10">
+        </div>
+        <button id="generate-btn">Generate & Check</button>
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>Checking usernames...</p>
+            <p id="progress">0/0 checked</p>
+        </div>
+        <div id="results" class="hidden">
+            <h2>Available Usernames</h2>
+            <div id="available-list"></div>
+            <button id="copy-btn">Copy All</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>

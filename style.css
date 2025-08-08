@@ -1,0 +1,141 @@
+:root {
+    --bg-color: #18222d;
+    --secondary-bg: #1e2a37;
+    --text-color: #e1e3e6;
+    --primary-color: #2ea6ff;
+    --border-color: #2d3a48;
+    --input-bg: #2d3a48;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    width: 422px;
+    height: 625px;
+    overflow: hidden;
+}
+
+.container {
+    padding: 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+h1, h2 {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #1d8ad8;
+}
+
+button:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+#results {
+    margin-top: 20px;
+}
+
+#available-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--secondary-bg);
+}
+
+.username-item {
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+.username-item:last-child {
+    border-bottom: none;
+}
+
+.copy-icon {
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#loading {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary-color);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#copy-btn {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+#copy-btn:hover {
+    background-color: rgba(46, 166, 255, 0.1);
+}
